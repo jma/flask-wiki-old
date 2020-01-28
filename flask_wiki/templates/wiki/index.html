@@ -1,0 +1,11 @@
+{% extends 'wiki/page.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        {{ page }}
+    </div>
+    <div class="col-md-4">
+        {{ page.toc }}
+    </div>
+</div>
+{% endblock %}
