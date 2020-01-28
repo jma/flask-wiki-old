@@ -21,6 +21,7 @@ class BootstrapExtension(Extension):
         self.processor.config = self.getConfigs()
         md.treeprocessors.add('bootstrap', self.processor, '_end')
 
+
 class BootstrapTreeprocessor(Treeprocessor):
 
     def run(self, node):

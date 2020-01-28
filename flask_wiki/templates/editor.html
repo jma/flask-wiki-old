@@ -1,0 +1,19 @@
+{% from 'bootstrap/form.html' import render_form_row %}
+{% extends 'wiki/page.html' %}
+{% block content %}
+{% block styles %}
+<!-- Bootstrap CSS -->
+{{ bootstrap.load_css() }}
+<style>
+    .editor textarea {
+        height: 400px;
+    }
+</style>
+{% endblock %}
+
+<form class="editor" method="post">
+    {{ form.csrf_token() }}
+    {{ render_form_row([form.title, form.tags]) }}
+    {{ render_form_row([form.body]) }}
+    <input class="btn btn-primary" type="submit" value="Save">
+</form>{% endblock %}
