@@ -41,4 +41,8 @@ def edit(url):
         page.save()
         flash('"%s" was saved.' % page.title, 'success')
         return redirect(url_for('wiki.display', url=url))
-    return render_template('editor.html', form=form, page=page)
+    return render_template('wiki/editor.html', form=form, page=page)
+
+@blueprint.errorhandler(404)
+def page_not_found(error):
+    return render_template('wiki/404.html'), 404
