@@ -24,6 +24,19 @@ blueprint = Blueprint(
     static_folder='static'
 )
 
+@blueprint.app_template_filter()
+def prune_url(path):
+    return path.replace(current_app.config.get('WIKI_URL_PREFIX'), '').strip('/')
+
+@blueprint.app_template_filter()
+def edit_path_list(path):
+    ln = path.split('_')[-1]
+    base_path = path
+    if ln in current_wiki.languages:
+        base_path = path.rsplit('_', 1)[0]
+    print(ln, base_path, path)
+    return list(filter(lambda v: v['path'] != path, [dict(ln=ln, path='_'.join((base_path, ln))) for ln in current_wiki.languages]))
+
 @blueprint.before_request
 def setWiki():
     get_wiki()
@@ -49,7 +62,7 @@ def edit(url):
         page.save()
         flash('"%s" was saved.' % page.title, 'success')
         return redirect(url_for('wiki.display', url=url))
-    return render_template('wiki/editor.html', form=form, page=page)
+    return render_template('wiki/editor.html', form=form, page=page, path=url)
 
 
 @blueprint.route('/preview/', methods=['POST'])

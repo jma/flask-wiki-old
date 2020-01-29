@@ -46,10 +46,25 @@
     aria-labelledby="home-tab"
   >
     <form class="editor" method="post">
+
       {{ form.csrf_token() }}
       {{ render_form_row([form.title, form.tags]) }}
       {{ render_form_row([form.body]) }}
-      <input class="btn btn-outline-primary" type="submit" value="Save" />
+      <button class="btn btn-sm btn-outline-primary" type="submit">Save</button>
+      {%- set pathes = path | edit_path_list -%}
+      {%- if pathes %}
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline-primary btn-sm">Edit in</button>
+        <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+          {%- for path in pathes %}
+          <a class="dropdown-item" href="{{ url_for('wiki.edit', url=path.path) }}">{{ path.ln }}</a>
+          {%- endfor -%}
+        </div>
+      </div>
+      {%- endif -%}
     </form>
   </div>
   <div
@@ -81,7 +96,6 @@
       data: { body: bodycontent },
       success: function(msg) {
         $pre.html(msg);
-        // console.log(msg);
       },
       error: function() {
         $pre.addClass('alert').addClass('alert-error');

@@ -1,5 +1,5 @@
 title: Demo
-tags: demo
+tags: demo, demo2
 
 # Maison
 

@@ -20,7 +20,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         WIKI_CURRENT_LANGUAGE = lambda: session.get('ln', 'fr'),
-        WIKI_LANGUAGES = ['fr', 'en'],
+        WIKI_LANGUAGES = ['fr', 'en', 'it'],
         DEBUG=True
     )
     if test_config is None:
