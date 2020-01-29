@@ -1,9 +1,38 @@
 {% extends 'wiki/page.html' %}
 
-{% block content %}
-<div style="position: relative">
+{% block styles %}
+{{ super() }}
+    <style>
+        .wiki-files {
+            position: relative;
+        }
+        .wiki-files .toast {
+            position: absolute;
+            top: 50px;
+            left: 0;
+        }
+        .wiki-files figure img {
+            max-width:200px;
+            max-height:200px
+        }
+        .wiki-files form .custom-file {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .wiki-files form input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+    </style>
+{% endblock %}
 
-    <div data-delay="1500" class="toast" style="position: absolute; top: 50px; left: 0;">
+{% block content %}
+<div class="wiki-files">
+    <div data-delay="1500" class="toast">
         <div class="toast-header text-primary font-weight-bold">
             Markdown
         </div>
@@ -14,8 +43,8 @@
 
     <form class="float-right" method="post" enctype="multipart/form-data">
         <div class="custom-file">
-            <input type="file" name="file" class="custom-file-input" id="customFile" accept="image/*"/>
-            <label class="custom-file-label" for="customFile">Add an image</label>
+                <button class="btn btn-outline-primary btn-sm">Upload a file</button>
+                <input class="custom-file-input" type="file" name="file" />
         </div>
     </form>
 
@@ -24,7 +53,6 @@
     {% for file in files %}
     <figure class="figure ml-4">
         <img
-            style="max-width:200px; max-height:200px"
             src="{{ url_for('uploaded_files', filename=file) }}"
             class="figure-img img-fluid rounded img-thumbnail"
             alt="{{ file }}"
@@ -43,7 +71,6 @@
 {% block scripts -%}
 {{ super() }}
 <script>
-
   // Add the following code if you want the name of the file appear on select
   $('.custom-file-input').on('change', function() {
     var form = $('form');

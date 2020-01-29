@@ -239,13 +239,19 @@ class WikiBase(object):
     def path(self, url):
         return os.path.join(self.root, url + '.md')
 
+    def ln_path(self, url):
+        return os.path.join(self.root, url + '_%s.md' % self.current_language)
+
     def exists(self, url):
         path = self.path(url)
         return os.path.exists(path)
 
     def get(self, url):
-        path = os.path.join(self.root, url + '.md')
-        if self.exists(url):
+        path = self.ln_path(url)
+        if os.path.isfile(path):
+            return Page(path, url)
+        path = self.path(url)
+        if os.path.isfile(path):
             return Page(path, url)
         return None
 
@@ -357,6 +363,14 @@ class WikiBase(object):
             if tag in page.tags:
                 tagged.append(page)
         return sorted(tagged, key=lambda x: x.title.lower())
+
+    @property
+    def current_language(self):
+        return current_app.config.get('WIKI_CURRENT_LANGUAGE')()
+
+    @property
+    def languages(self):
+        return current_app.config.get('WIKI_LANGUAGES')
 
     def search(self, term, ignore_case=True, attrs=['title', 'tags', 'body']):
         pages = self.index()

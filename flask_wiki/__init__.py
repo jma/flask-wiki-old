@@ -22,6 +22,8 @@ class Wiki(object):
 
     def init_app(self, app):
         app.config.setdefault('WIKI_HOME', 'home')
+        app.config.setdefault('WIKI_CURRENT_LANGUAGE', lambda: 'en')
+        app.config.setdefault('WIKI_LANGUAGES', ['en'])
         app.config.setdefault('WIKI_URL_PREFIX', '/wiki')
         app.config.setdefault('WIKI_CONTENT_DIR', './data')
         app.config.setdefault('WIKI_UPLOAD_FOLDER', os.path.join(app.config.get('WIKI_CONTENT_DIR'), 'files'))

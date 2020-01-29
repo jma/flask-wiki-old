@@ -51,8 +51,13 @@
 
     <footer class="container py-5">
         <div class="row">
-            <div class="col-12 col-md">
+            <div class="col-md-6">
                 <small class="d-block mb-3 text-muted">RERO &copy; 2020</small>
+            </div>
+            <div class="col-md-6">
+                {% for language in g._wiki.languages -%}
+                    <a class="ml-2" href="{{ url_for('change_language', ln=language) }}">{{ language }}</a>
+                {%- endfor %}
             </div>
         </div>
     </footer>

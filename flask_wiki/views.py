@@ -12,7 +12,7 @@
 import os
 import glob
 from flask import Blueprint, render_template, current_app, flash, redirect, url_for, request, jsonify
-from .api import current_wiki, Processor
+from .api import current_wiki, Processor, get_wiki
 from .forms import EditorForm
 from werkzeug.utils import secure_filename
 
@@ -23,6 +23,10 @@ blueprint = Blueprint(
     template_folder='templates',
     static_folder='static'
 )
+
+@blueprint.before_request
+def setWiki():
+    get_wiki()
 
 @blueprint.route('/')
 def index():

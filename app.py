@@ -10,7 +10,7 @@
 
 """Simple Testing applications."""
 
-from flask import Flask
+from flask import Flask, g, current_app, redirect, url_for, session
 from flask_wiki import Wiki
 from flask_bootstrap import Bootstrap
 
@@ -19,6 +19,8 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
+        WIKI_CURRENT_LANGUAGE = lambda: session.get('ln', 'fr'),
+        WIKI_LANGUAGES = ['fr', 'en'],
         DEBUG=True
     )
     if test_config is None:
@@ -29,6 +31,12 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
     Bootstrap(app)
     Wiki(app)
+
+    @app.route('/language/<ln>')
+    def change_language(ln):
+        session['ln'] = ln
+        return redirect(url_for('wiki.index'))
+
     return app
 
 app = create_app()
