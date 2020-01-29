@@ -1,0 +1,40 @@
+{% extends 'wiki/page.html' %} {% block content %}
+<form class="float-right" method="post" enctype="multipart/form-data">
+    <div class="custom-file">
+      <input type="file" name="file" class="custom-file-input" id="customFile" accept="image/*"/>
+      <label class="custom-file-label" for="customFile">Add an image</label>
+    </div>
+  </form>
+<h1>List of Uploaded Files</h1>
+{% for file in files %}
+<figure class="figure ml-4">
+  <img
+    style="max-width:200px; max-height:200px"
+    src="{{ url_for('uploaded_files', filename=file) }}"
+    class="figure-img img-fluid rounded img-thumbnail"
+    alt="{{ file }}"
+  />
+  <figcaption class="figure-caption text-center">
+    <a href="{{ url_for('uploaded_files', filename=file) }}">{{ file }}</a>
+  </figcaption>
+</figure>
+{% endfor %}
+
+{% endblock %} {% block scripts -%}
+{{ super() }}
+<script>
+  // Add the following code if you want the name of the file appear on select
+  $('.custom-file-input').on('change', function() {
+    var form = $('form');
+    form.submit();
+    // var fileName = $(this)
+    //   .val()
+    //   .split('\\')
+    //   .pop();
+    // $(this)
+    //   .siblings('.custom-file-label')
+    //   .addClass('selected')
+    //   .html(fileName);
+  });
+</script>
+{% endblock %}
