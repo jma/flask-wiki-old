@@ -9,8 +9,8 @@
 
 """Views to respond to HTTP requests."""
 
-from flask import Blueprint, render_template, current_app, flash, redirect, url_for
-from .api import current_wiki
+from flask import Blueprint, render_template, current_app, flash, redirect, url_for, request
+from .api import current_wiki, Processor
 from .forms import EditorForm
 
 blueprint = Blueprint(
@@ -42,6 +42,16 @@ def edit(url):
         flash('"%s" was saved.' % page.title, 'success')
         return redirect(url_for('wiki.display', url=url))
     return render_template('wiki/editor.html', form=form, page=page)
+
+
+@blueprint.route('/preview/', methods=['POST'])
+def preview():
+    data = {}
+    processor = Processor(request.form['body'])
+    print(request.form.get('body'))
+    data['html'], data['body'], data['meta'], data['toc'] = processor.process()
+    return data['html']
+
 
 @blueprint.errorhandler(404)
 def page_not_found(error):
