@@ -105,9 +105,12 @@ def list_files():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['WIKI_UPLOAD_FOLDER'], filename))
+            output_filename = os.path.join(current_app.config['WIKI_UPLOAD_FOLDER'], filename)
+            if os.path.isfile(output_filename):
+                flash('File already exists', category='danger')
+            else:
+                file.save(output_filename)
     files = [os.path.basename(f) for f in sorted(glob.glob('/'.join([current_app.config.get('WIKI_UPLOAD_FOLDER'), '*'])), key=os.path.getmtime)]
-    # files = sorted(files, key=os.path.getmtime)
     return render_template('wiki/files.html', files=files)
 
 @blueprint.errorhandler(404)
