@@ -13,9 +13,9 @@ from flask_wtf import Form
 from wtforms import TextField
 from wtforms import TextAreaField
 from wtforms.validators import InputRequired
-
+from flask_babel import gettext as _
 
 class EditorForm(Form):
-    title = TextField('title', [InputRequired()])
-    body = TextAreaField('body', [InputRequired()])
-    tags = TextField('tags')
+    title = TextField(_('title'), [InputRequired()])
+    body = TextAreaField(_('body'), [InputRequired()])
+    tags = TextField(_('tags'))

@@ -1,0 +1,92 @@
+# French translations for Flask-Admin.
+# Copyright (C) 2020 ORGANIZATION
+# This file is distributed under the same license as the Flask-Admin
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Flask-Admin VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-01-30 13:36+0100\n"
+"PO-Revision-Date: 2020-01-30 11:47+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: flask_wiki/forms.py:19
+msgid "title"
+msgstr "titre"
+
+#: flask_wiki/forms.py:20
+msgid "body"
+msgstr "contenu"
+
+#: flask_wiki/forms.py:21
+msgid "tags"
+msgstr "tags"
+
+#: flask_wiki/views.py:88 flask_wiki/views.py:115
+msgid "No file part"
+msgstr "Pas de champ file"
+
+#: flask_wiki/views.py:94 flask_wiki/views.py:121
+msgid "No selected file"
+msgstr "Aucun fichier sélectionnés"
+
+#: flask_wiki/views.py:127
+msgid "File already exists"
+msgstr "Le fichier existe déjà"
+
+#: flask_wiki/templates/wiki/404.html:7
+msgid "You did not create any content for this page yet."
+msgstr "Vous n'avez pas encore créé de contenu pour cette page."
+
+#: flask_wiki/templates/wiki/404.html:10
+msgid "Create a new page"
+msgstr "Créer une nouvelle page"
+
+#: flask_wiki/templates/wiki/editor.html:25
+msgid "Edit"
+msgstr "Editer"
+
+#: flask_wiki/templates/wiki/editor.html:37
+msgid "Preview"
+msgstr "Aperçu"
+
+#: flask_wiki/templates/wiki/editor.html:53
+msgid "Save"
+msgstr "Sauver"
+
+#: flask_wiki/templates/wiki/editor.html:56
+msgid "Edit in"
+msgstr "Editer en"
+
+#: flask_wiki/templates/wiki/files.html:40
+msgid "Copied in you clipboard"
+msgstr "Copié dans le presse papier"
+
+#: flask_wiki/templates/wiki/files.html:51
+msgid "List of Uploaded Files"
+msgstr "Liste des fichiers téléchargés"
+
+#: flask_wiki/templates/wiki/index.html:14
+msgid "Table of Content"
+msgstr "Table des matières"
+
+#: flask_wiki/templates/wiki/page.html:33
+msgid "Home"
+msgstr "Home"
+
+#: flask_wiki/templates/wiki/page.html:36
+msgid "MarkDown Demo"
+msgstr "Démo Markdown"
+
+#: flask_wiki/templates/wiki/page.html:39
+msgid "Files"
+msgstr "Fichiers"

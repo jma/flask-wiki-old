@@ -22,7 +22,7 @@
       role="tab"
       aria-controls="home"
       aria-selected="true"
-      >Edit</a
+      >{{ _('Edit') }}</a
     >
   </li>
   <li class="nav-item">
@@ -34,7 +34,7 @@
       role="tab"
       aria-controls="profile"
       aria-selected="false"
-      >Preview</a
+      >{{ _('Preview') }}</a
     >
   </li>
 </ul>
@@ -50,13 +50,12 @@
       {{ form.csrf_token() }}
       {{ render_form_row([form.title, form.tags]) }}
       {{ render_form_row([form.body]) }}
-      <button class="btn btn-sm btn-outline-primary" type="submit">Save</button>
+      <button class="btn btn-sm btn-outline-primary" type="submit">{{ _('Save') }}</button>
       {%- set pathes = path | edit_path_list -%}
       {%- if pathes %}
       <div class="btn-group">
-        <button type="button" class="btn btn-outline-primary btn-sm">Edit in</button>
+        <button type="button" class="btn btn-outline-primary btn-sm">{{ _('Edit in') }}</button>
         <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu">
           {%- for path in pathes %}

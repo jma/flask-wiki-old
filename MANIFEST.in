@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+#
+# This file is part of Invenio.
+# Copyright (C) 2015-2018 CERN.
+#
+# Invenio is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+
+include .dockerignore
+include LICENSE
+include babel.cfg
+include examples/requirements.txt
+recursive-include docs *.py
+recursive-include examples *.py
+recursive-include examples/data *
+recursive-include flask-wiki *.html
+recursive-include flask-wiki *.js
+recursive-include flask-wiki *.mo
+recursive-include flask-wiki *.po
+recursive-include flask-wiki *.pot
+recursive-include flask-wiki *.scss
+recursive-include tests *.py

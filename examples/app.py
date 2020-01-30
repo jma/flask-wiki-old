@@ -10,9 +10,12 @@
 
 """Simple Testing applications."""
 
-from flask import Flask, g, current_app, redirect, url_for, session
+from flask import Flask, g, current_app, redirect, url_for, session, request
 from flask_wiki import Wiki
 from flask_bootstrap import Bootstrap
+from flask_babel import Babel
+from pkg_resources import resource_filename
+from flask_babel import gettext as _
 
 def create_app(test_config=None):
     # create and configure the app
@@ -20,7 +23,9 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         WIKI_CURRENT_LANGUAGE = lambda: session.get('ln', 'fr'),
-        WIKI_LANGUAGES = ['fr', 'en', 'it'],
+        WIKI_LANGUAGES = ['en', 'fr', 'de', 'it'],
+        BABEL_TRANSLATION_DIRECTORIES = resource_filename('flask_wiki', 'translations'),
+        BABEL_DEFAULT_LOCALE = 'en',
         DEBUG=True
     )
     if test_config is None:
@@ -31,12 +36,21 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
     Bootstrap(app)
     Wiki(app)
+    # use the flask-wiki translations
+    # domain = Domain(resource_filename('flask_wiki', 'translations'))
+    babel = Babel(app)
+
+    @babel.localeselector
+    def get_locale():
+        if 'ln' in session:
+            return session['ln']
+        ln = request.accept_languages.best_match(app.config.get('WIKI_LANGUAGES'))
+        return ln
 
     @app.route('/language/<ln>')
     def change_language(ln):
         session['ln'] = ln
         return redirect(url_for('wiki.index'))
-
     return app
 
 app = create_app()

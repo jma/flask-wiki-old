@@ -6,13 +6,12 @@ Simple file based wiki for Flask
 - clone the repo
 - pipenv sync
 - pipenv run pip install -e .
-- flask run
+- cd examples; pipenv run serve
 - go to http://localhost:5000/wiki
 
 ## tips
 
 - do not forget to add a header with title and tags if you edit your md file by hand
-
 
 ## config
 

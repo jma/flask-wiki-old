@@ -15,7 +15,7 @@ from flask import Blueprint, render_template, current_app, flash, redirect, url_
 from .api import current_wiki, Processor, get_wiki
 from .forms import EditorForm
 from werkzeug.utils import secure_filename
-
+from flask_babel import gettext
 
 blueprint = Blueprint(
     'wiki',
@@ -85,13 +85,13 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
+            flash(_('No file part'))
             return redirect(request.url)
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            flash('No selected file')
+            flash(_('No selected file'))
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -112,19 +112,19 @@ def list_files():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
+            flash(_('No file part'))
             return redirect(request.url)
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            flash('No selected file')
+            flash(_('No selected file'))
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             output_filename = os.path.join(current_app.config['WIKI_UPLOAD_FOLDER'], filename)
             if os.path.isfile(output_filename):
-                flash('File already exists', category='danger')
+                flash(_('File already exists'), category='danger')
             else:
                 file.save(output_filename)
     files = [os.path.basename(f) for f in sorted(glob.glob('/'.join([current_app.config.get('WIKI_UPLOAD_FOLDER'), '*'])), key=os.path.getmtime)]
