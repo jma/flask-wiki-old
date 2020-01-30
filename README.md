@@ -19,3 +19,4 @@ Simple file based wiki for Flask
 - WIKI_URL_PREFIX: blueprint prefix (default: /demo)
 - WIKI_CONTENT_DIR: markdown files location (default: ./data)
 - WIKI_UPLOAD_FOLDER: files location such as images, pdf, etc (default: ./data/files)
+- need more config
