@@ -374,6 +374,8 @@ class WikiBase(object):
 
     def search(self, term, ignore_case=True, attrs=['title', 'tags', 'body']):
         pages = self.index()
+        if not term:
+            return pages
         regex = re.compile(term, re.IGNORECASE if ignore_case else 0)
         matched = []
         for page in pages:

@@ -1,17 +1,17 @@
-{% from 'bootstrap/form.html' import render_form_row %} {% extends
-'wiki/page.html' %}
+<!--
+  This file is part of Flask-Wiki
+  Copyright (C) 2020 RERO
 
-{% block styles %}
-<!-- Bootstrap CSS -->
-{{ bootstrap.load_css() }}
-<style>
-  form.editor textarea {
-    height: 400px;
-  }
-</style>
-{% endblock %}
+  Flask-Wiki is free software; you can redistribute it and/or modify
+  it under the terms of the Revised BSD License; see LICENSE file for
+  more details
+-->
+
+{% from 'bootstrap/form.html' import render_form_row %}
+{% extends 'wiki/page.html' %}
 
 {% block content %}
+<div class="wiki-editor">
 <ul class="nav nav-tabs" role="tablist">
   <li class="nav-item">
     <a
@@ -32,6 +32,7 @@
       id="preview-tab"
       href="#preview"
       role="tab"
+      onclick="markdownPreview('{{ url_for("wiki.preview") }}')"
       aria-controls="profile"
       aria-selected="false"
       >{{ _('Preview') }}</a
@@ -59,7 +60,7 @@
         </button>
         <div class="dropdown-menu">
           {%- for path in pathes %}
-          <a class="dropdown-item" href="{{ url_for('wiki.edit', url=path.path) }}">{{ path.ln }}</a>
+          <a class="dropdown-item" href="{{ url_for('wiki.edit', url=path.path) }}">{{ path.ln | translate_ln }}</a>
           {%- endfor -%}
         </div>
       </div>
@@ -73,37 +74,6 @@
     aria-labelledby="profile-tab"
   ></div>
 </div>
+</div>
 
-{% endblock %}
-
-{% block scripts -%}
-{{ super() }}
-<script>
-  $('#preview-tab').on('click', function() {
-    var $form = $('form');
-    var $inputs = $form.find('input, textarea, button');
-    var $pre = $('#preview');
-    var bodycontent = 'title: preview\n\n' + $form.find('textarea').val();
-    $inputs.prop('disabled', true);
-    $pre
-      .removeClass('alert')
-      .removeClass('alert-error')
-      .html('Loading...');
-    $.ajax({
-      url: "{{ url_for('wiki.preview') }}",
-      type: 'POST',
-      data: { body: bodycontent },
-      success: function(msg) {
-        $pre.html(msg);
-      },
-      error: function() {
-        $pre.addClass('alert').addClass('alert-error');
-        $pre.html('There was a problem with the preview.');
-      },
-      complete: function() {
-        $inputs.prop('disabled', false);
-      }
-    });
-  });
-</script>
 {% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flask-Admin VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-01-30 13:36+0100\n"
+"POT-Creation-Date: 2020-01-30 15:37+0100\n"
 "PO-Revision-Date: 2020-01-30 11:47+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -31,23 +31,23 @@ msgstr ""
 msgid "tags"
 msgstr ""
 
-#: flask_wiki/views.py:88 flask_wiki/views.py:115
+#: flask_wiki/views.py:92 flask_wiki/views.py:119
 msgid "No file part"
 msgstr ""
 
-#: flask_wiki/views.py:94 flask_wiki/views.py:121
+#: flask_wiki/views.py:98 flask_wiki/views.py:125
 msgid "No selected file"
 msgstr ""
 
-#: flask_wiki/views.py:127
+#: flask_wiki/views.py:131
 msgid "File already exists"
 msgstr ""
 
-#: flask_wiki/templates/wiki/404.html:7
+#: flask_wiki/templates/wiki/404.html:16
 msgid "You did not create any content for this page yet."
 msgstr ""
 
-#: flask_wiki/templates/wiki/404.html:10
+#: flask_wiki/templates/wiki/404.html:19
 msgid "Create a new page"
 msgstr ""
 
@@ -55,39 +55,47 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: flask_wiki/templates/wiki/editor.html:37
+#: flask_wiki/templates/wiki/editor.html:38
 msgid "Preview"
 msgstr ""
 
-#: flask_wiki/templates/wiki/editor.html:53
+#: flask_wiki/templates/wiki/editor.html:54
 msgid "Save"
 msgstr "Italian"
 
-#: flask_wiki/templates/wiki/editor.html:56
+#: flask_wiki/templates/wiki/editor.html:57
 msgid "Edit in"
 msgstr ""
 
-#: flask_wiki/templates/wiki/files.html:40
+#: flask_wiki/templates/wiki/files.html:19
 msgid "Copied in you clipboard"
 msgstr ""
 
-#: flask_wiki/templates/wiki/files.html:51
+#: flask_wiki/templates/wiki/files.html:30
 msgid "List of Uploaded Files"
 msgstr ""
 
-#: flask_wiki/templates/wiki/index.html:14
+#: flask_wiki/templates/wiki/index.html:23
 msgid "Table of Content"
 msgstr ""
 
-#: flask_wiki/templates/wiki/page.html:33
+#: flask_wiki/templates/wiki/page.html:43
 msgid "Home"
 msgstr ""
 
-#: flask_wiki/templates/wiki/page.html:36
+#: flask_wiki/templates/wiki/page.html:46
 msgid "MarkDown Demo"
 msgstr ""
 
-#: flask_wiki/templates/wiki/page.html:39
+#: flask_wiki/templates/wiki/page.html:49
 msgid "Files"
+msgstr ""
+
+#: flask_wiki/templates/wiki/page.html:52
+msgid "Search"
+msgstr ""
+
+#: flask_wiki/templates/wiki/search.html:19
+msgid "results"
 msgstr ""
 

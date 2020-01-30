@@ -1,3 +1,12 @@
+<!--
+  This file is part of Flask-Wiki
+  Copyright (C) 2020 RERO
+
+  Flask-Wiki is free software; you can redistribute it and/or modify
+  it under the terms of the Revised BSD License; see LICENSE file for
+  more details
+-->
+
 {% from 'bootstrap/utils.html' import render_messages %}
 
 <!doctype html>
@@ -13,6 +22,7 @@
     <!-- Bootstrap CSS -->
     {{ bootstrap.load_css() }}
     <link href="{{ url_for('wiki.static', filename='css/all.min.css') }}" rel="stylesheet"> <!--font awsome 5.12.0 -->
+    <link href="{{ url_for('wiki.static', filename='css/wiki.css') }}" rel="stylesheet">
     {% endblock %}
 
     <title>Flask-Wiki</title>
@@ -38,12 +48,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('wiki.list_files') }}">{{ _('Files') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('wiki.search') }}">{{ _('Search') }}</a>
+                </li>
             </ul>
         </div>
     </nav>
 
-
-    <div class="container">
+    <div class="container py-4">
         {{ render_messages(dismissible=True, dismiss_animate=True) }}
         {% block content %}
         {% endblock %}
@@ -62,11 +74,10 @@
         </div>
     </footer>
 
-    <!-- Your page content -->
-
     {% block scripts %}
     <!-- Optional JavaScript -->
     {{ bootstrap.load_js() }}
+    <script type="text/javascript" src="{{ url_for('wiki.static', filename='js/wiki.js') }}"></script>
     {% endblock %}
 </body>
 

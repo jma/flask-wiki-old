@@ -1,34 +1,13 @@
-{% extends 'wiki/page.html' %}
+<!--
+  This file is part of Flask-Wiki
+  Copyright (C) 2020 RERO
 
-{% block styles %}
-{{ super() }}
-    <style>
-        .wiki-files {
-            position: relative;
-        }
-        .wiki-files .toast {
-            position: absolute;
-            top: 50px;
-            left: 0;
-        }
-        .wiki-files figure img {
-            max-width:200px;
-            max-height:200px
-        }
-        .wiki-files form .custom-file {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-        }
-        .wiki-files form input[type=file] {
-            font-size: 100px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-        }
-    </style>
-{% endblock %}
+  Flask-Wiki is free software; you can redistribute it and/or modify
+  it under the terms of the Revised BSD License; see LICENSE file for
+  more details
+-->
+
+{% extends 'wiki/page.html' %}
 
 {% block content %}
 <div class="wiki-files">
@@ -44,7 +23,7 @@
     <form class="float-right" method="post" enctype="multipart/form-data">
         <div class="custom-file">
                 <button class="btn btn-outline-primary btn-sm">Upload a file</button>
-                <input class="custom-file-input" type="file" name="file" />
+                <input class="custom-file-input" type="file" name="file" accept="image/*" />
         </div>
     </form>
 
@@ -66,32 +45,4 @@
     </figure>
     {% endfor %}
 </div>
-{% endblock %}
-
-{% block scripts -%}
-{{ super() }}
-<script>
-  // Add the following code if you want the name of the file appear on select
-  $('.custom-file-input').on('change', function() {
-    var form = $('form');
-    form.submit();
-  });
-
-  // copy the markdown code in the clip board
-  function copy(name, link) {
-    var $temp = $('<div>');
-    $('body').append($temp);
-    $temp
-      .attr('contenteditable', true)
-      .html('![' + name + '](' + link + ' "' + name +'"' + ')')
-      .select()
-      .on('focus', function() {
-        document.execCommand('selectAll', false, null);
-      })
-      .focus();
-    document.execCommand('copy');
-    $temp.remove();
-    $('.toast').toast('show');
-  }
-</script>
 {% endblock %}

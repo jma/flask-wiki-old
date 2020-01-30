@@ -12,10 +12,11 @@
 import os
 import glob
 from flask import Blueprint, render_template, current_app, flash, redirect, url_for, request, jsonify
+from babel import Locale
 from .api import current_wiki, Processor, get_wiki
 from .forms import EditorForm
 from werkzeug.utils import secure_filename
-from flask_babel import gettext
+from flask_babel import gettext as _
 
 blueprint = Blueprint(
     'wiki',
@@ -29,12 +30,15 @@ def prune_url(path):
     return path.replace(current_app.config.get('WIKI_URL_PREFIX'), '').strip('/')
 
 @blueprint.app_template_filter()
+def translate_ln(ln):
+    return Locale(current_wiki.current_language).languages.get(ln)
+
+@blueprint.app_template_filter()
 def edit_path_list(path):
     ln = path.split('_')[-1]
     base_path = path
     if ln in current_wiki.languages:
         base_path = path.rsplit('_', 1)[0]
-    print(ln, base_path, path)
     return list(filter(lambda v: v['path'] != path, [dict(ln=ln, path='_'.join((base_path, ln))) for ln in current_wiki.languages]))
 
 @blueprint.before_request
@@ -129,6 +133,12 @@ def list_files():
                 file.save(output_filename)
     files = [os.path.basename(f) for f in sorted(glob.glob('/'.join([current_app.config.get('WIKI_UPLOAD_FOLDER'), '*'])), key=os.path.getmtime)]
     return render_template('wiki/files.html', files=files)
+
+@blueprint.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('q', '')
+    results = current_wiki.search(query)
+    return render_template('wiki/search.html', results=results, query=query)
 
 @blueprint.errorhandler(404)
 def page_not_found(error):
