@@ -37,17 +37,17 @@
 
 """Core classes."""
 
-from collections import OrderedDict
-from io import open
 import os
 import re
+from collections import OrderedDict
+from io import open
 
-from flask import abort
-from flask import url_for, g, current_app
 import markdown
+from flask import abort, current_app, g, url_for
 from werkzeug.local import LocalProxy
-from .utils import clean_url, wikilink
+
 from .markdown_ext import BootstrapExtension
+from .utils import clean_url, wikilink
 
 
 class Processor(object):
@@ -68,14 +68,18 @@ class Processor(object):
 
             :param str text: the text to process
         """
-        self.md = markdown.Markdown(extensions=[
-            BootstrapExtension(),
-            'codehilite',
-            'fenced_code',
-            'toc',
-            'meta',
-            'tables'
-        ])
+        markdown_ext = current_app.config['WIKI_MARKDOWN_EXTENSIONS']
+
+        self.md = markdown.Markdown(extensions=set(
+            (
+                BootstrapExtension(),
+                'codehilite',
+                'fenced_code',
+                'toc',
+                'meta',
+                'tables'
+            )
+        ).union(markdown_ext))
         self.input = text
         self.markdown = None
         self.meta_raw = None
@@ -101,7 +105,6 @@ class Processor(object):
         """
         self.html = self.md.convert(self.pre)
         self.toc = self.md.toc
-
 
     def split_raw(self):
         """
@@ -150,12 +153,14 @@ class Processor(object):
 
         return self.final, self.markdown, self.meta, TOC(self.toc)
 
+
 class TOC(object):
     def __init__(self, toc):
         self._toc = toc
 
     def __html__(self):
         return self._toc
+
 
 class Page(object):
     def __init__(self, path, url, new=False):
@@ -385,10 +390,12 @@ class WikiBase(object):
                     break
         return matched
 
+
 def get_wiki():
     wiki = getattr(g, '_wiki', None)
     if wiki is None:
         wiki = g._wiki = WikiBase(current_app.config['WIKI_CONTENT_DIR'])
     return wiki
+
 
 current_wiki = LocalProxy(get_wiki)

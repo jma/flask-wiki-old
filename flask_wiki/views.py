@@ -9,14 +9,19 @@
 
 """Views to respond to HTTP requests."""
 
-import os
 import glob
-from flask import Blueprint, render_template, current_app, flash, redirect, url_for, request, jsonify
+import os
+from functools import wraps
+
 from babel import Locale
-from .api import current_wiki, Processor, get_wiki
-from .forms import EditorForm
+from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
+                   render_template, request, url_for)
+from flask.wrappers import Response
+from flask_babelex import gettext as _
 from werkzeug.utils import secure_filename
-from flask_babel import gettext as _
+
+from .api import Processor, current_wiki, get_wiki
+from .forms import EditorForm
 
 blueprint = Blueprint(
     'wiki',
@@ -25,13 +30,48 @@ blueprint = Blueprint(
     static_folder='static'
 )
 
+
+# PERMISSIONS
+# ===========
+def can_read_permission(func):
+    """Check Reading Permission."""
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        permission = current_app.config.get('WIKI_READ_VIEW_PERMISSION')()
+        if isinstance(permission, bool):
+            if not permission:
+                abort(403)
+            return func(*args, **kwargs)
+        return permission
+    return decorated_view
+
+
+def can_edit_permission(func):
+    """Check Edition Permission."""
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        permission = current_app.config.get('WIKI_EDIT_VIEW_PERMISSION')()
+        if isinstance(permission, bool):
+            if not permission:
+                abort(403)
+            return func(*args, **kwargs)
+        return permission
+    return decorated_view
+
+
+# FILTERS
+# =======
 @blueprint.app_template_filter()
 def prune_url(path):
-    return path.replace(current_app.config.get('WIKI_URL_PREFIX'), '').strip('/')
+    return path.replace(
+        current_app.config.get('WIKI_URL_PREFIX'),
+        '').strip('/')
+
 
 @blueprint.app_template_filter()
 def translate_ln(ln):
     return Locale(current_wiki.current_language).languages.get(ln)
+
 
 @blueprint.app_template_filter()
 def edit_path_list(path):
@@ -39,43 +79,28 @@ def edit_path_list(path):
     base_path = path
     if ln in current_wiki.languages:
         base_path = path.rsplit('_', 1)[0]
-    return list(filter(lambda v: v['path'] != path, [dict(ln=ln, path='_'.join((base_path, ln))) for ln in current_wiki.languages]))
+    return list(
+        filter(
+            lambda v: v['path'] != path,
+            [dict(ln=ln, path='_'.join((base_path, ln)))
+             for ln in current_wiki.languages]))
 
+
+# PROCESSORS
+# ==========
+@blueprint.context_processor
+def permission_processor():
+    return dict(
+        can_edit_wiki=current_app.config.get('WIKI_EDIT_UI_PERMISSION')(),
+        can_read_wiki= current_app.config.get('WIKI_READ_UI_PERMISSION')()
+    )
+
+
+# MISCS
+# =====
 @blueprint.before_request
 def setWiki():
     get_wiki()
-
-@blueprint.route('/')
-def index():
-    return display(current_app.config.get('WIKI_HOME'))
-
-@blueprint.route('/<path:url>/')
-def display(url):
-    page = current_wiki.get_or_404(url)
-    return render_template('wiki/index.html', page=page)
-
-
-@blueprint.route('/edit/<path:url>/', methods=['GET', 'POST'])
-def edit(url):
-    page = current_wiki.get(url)
-    form = EditorForm(obj=page)
-    if form.validate_on_submit():
-        if not page:
-            page = current_wiki.get_bare(url)
-        form.populate_obj(page)
-        page.save()
-        flash('"%s" was saved.' % page.title, 'success')
-        return redirect(url_for('wiki.display', url=url))
-    return render_template('wiki/editor.html', form=form, page=page, path=url)
-
-
-@blueprint.route('/preview/', methods=['POST'])
-def preview():
-    data = {}
-    processor = Processor(request.form['body'])
-    print(request.form.get('body'))
-    data['html'], data['body'], data['meta'], data['toc'] = processor.process()
-    return data['html']
 
 
 def allowed_file(filename):
@@ -84,36 +109,53 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@blueprint.route('/upload', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash(_('No file part'))
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash(_('No selected file'))
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['WIKI_UPLOAD_FOLDER'], filename))
-            return url_for('uploaded_files', filename=filename)
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+# ROUTES
+# ======
+@blueprint.route('/')
+@can_read_permission
+def index():
+    return redirect(url_for('wiki.page', url=current_app.config.get('WIKI_HOME')))
+
+
+@blueprint.route('/<path:url>/')
+@can_read_permission
+def page(url):
+    page = current_wiki.get_or_404(url)
+    return render_template(
+        current_app.config.get('WIKI_PAGE_TEMPLATE'),
+        page=page)
+
+
+@blueprint.route('/edit/<path:url>/', methods=['GET', 'POST'])
+@can_edit_permission
+def edit(url):
+    page = current_wiki.get(url)
+    form = EditorForm(obj=page)
+    if form.validate_on_submit():
+        if not page:
+            page = current_wiki.get_bare(url)
+        form.populate_obj(page)
+        page.save()
+        flash(_('Saved'), category='success')
+        return redirect(url_for('wiki.page', url=url))
+    return render_template(
+        current_app.config.get('WIKI_EDITOR_TEMPLATE'),
+        form=form, page=page, path=url)
+
+
+@blueprint.route('/preview/', methods=['POST'])
+@can_edit_permission
+def preview():
+    data = {}
+    processor = Processor(request.form['body'])
+    data['html'], data['body'], data['meta'], data['toc'] = processor.process()
+    return data['html']
+
 
 @blueprint.route('/files', methods=['GET', 'POST'])
-def list_files():
-    if request.method == 'POST':
+@can_read_permission
+def files():
+    if request.method == 'POST' and current_app.config['WIKI_EDIT_UI_PERMISSION']():
         # check if the post request has the file part
         if 'file' not in request.files:
             flash(_('No file part'))
@@ -126,20 +168,38 @@ def list_files():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            output_filename = os.path.join(current_app.config['WIKI_UPLOAD_FOLDER'], filename)
+            output_filename = os.path.join(
+                current_app.config['WIKI_UPLOAD_FOLDER'], filename)
             if os.path.isfile(output_filename):
                 flash(_('File already exists'), category='danger')
             else:
                 file.save(output_filename)
-    files = [os.path.basename(f) for f in sorted(glob.glob('/'.join([current_app.config.get('WIKI_UPLOAD_FOLDER'), '*'])), key=os.path.getmtime)]
-    return render_template('wiki/files.html', files=files)
+    if request.method == 'POST' and not current_app.config['WIKI_EDIT_UI_PERMISSION']():
+        flash(_('You do not have the permission to add files.'))
+    files = [os.path.basename(f) for f in sorted(glob.glob(
+        '/'.join([current_app.config.get('WIKI_UPLOAD_FOLDER'), '*'])), key=os.path.getmtime)]
+    return render_template(
+        current_app.config.get('WIKI_FILES_TEMPLATE'),
+        files=files)
+
 
 @blueprint.route('/search', methods=['GET'])
+@can_read_permission
 def search():
     query = request.args.get('q', '')
     results = current_wiki.search(query)
-    return render_template('wiki/search.html', results=results, query=query)
+    return render_template(
+        current_app.config.get('WIKI_SEARCH_TEMPLATE'),
+        results=results, query=query)
+
 
 @blueprint.errorhandler(404)
-def page_not_found(error):
-    return render_template('wiki/404.html'), 404
+def not_found(error):
+    return render_template(
+        current_app.config.get('WIKI_NOT_FOUND_TEMPLATE')), 404
+
+
+@blueprint.errorhandler(403)
+def forbidden(error):
+    return render_template(
+        current_app.config.get('WIKI_FORBIDDEN_TEMPLATE')), 403

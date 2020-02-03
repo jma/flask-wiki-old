@@ -13,6 +13,8 @@ from flask import current_app
 import os
 from .views import blueprint
 from werkzeug.middleware.shared_data import SharedDataMiddleware
+from . import config
+
 
 class Wiki(object):
     def __init__(self, app=None):
@@ -21,19 +23,22 @@ class Wiki(object):
             self.init_app(app)
 
     def init_app(self, app):
-        app.config.setdefault('WIKI_HOME', 'home')
-        app.config.setdefault('WIKI_CURRENT_LANGUAGE', lambda: 'en')
-        app.config.setdefault('WIKI_LANGUAGES', ['en'])
-        app.config.setdefault('WIKI_URL_PREFIX', '/wiki')
-        app.config.setdefault('WIKI_CONTENT_DIR', './data')
-        app.config.setdefault('WIKI_UPLOAD_FOLDER', os.path.join(app.config.get('WIKI_CONTENT_DIR'), 'files'))
+        """Flask application initialization."""
+        self.init_config(app)
         app.register_blueprint(
             blueprint,
             url_prefix=app.config.get('WIKI_URL_PREFIX')
         )
-        app.add_url_rule(app.config.get('WIKI_URL_PREFIX') + '/files/<filename>', 'uploaded_files',
-                 build_only=True)
-        app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-            app.config.get('WIKI_URL_PREFIX') + '/files':  app.config['WIKI_UPLOAD_FOLDER']
-        })
+        app.add_url_rule(
+            app.config.get('WIKI_URL_PREFIX') + '/files/<filename>',
+            'uploaded_files', build_only=True)
 
+        app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {app.config.get(
+            'WIKI_URL_PREFIX') + '/files': app.config['WIKI_UPLOAD_FOLDER']})
+        app.extensions['flask-wiki'] = self
+
+    def init_config(self, app):
+        """Initialize configuration."""
+        for k in dir(config):
+            if k.startswith('WIKI_'):
+                app.config.setdefault(k, getattr(config, k))

@@ -1,11 +1,27 @@
+# -*- coding: utf-8 -*-
+#
+# This file is part of Flask-Wiki
+# Copyright (C) 2020 RERO
+#
+# Flask-Wiki is free software; you can redistribute it and/or modify
+# it under the terms
+
 """
 Flask-Wiki
 -------------
 
 This is the description for that library
 """
-from setuptools import setup
+from setuptools import setup, find_packages
 
+install_requires = [
+    'Bootstrap-Flask',
+    'Flask',
+    'Flask-Babel',
+    'Flask-WTF',
+    'Markdown',
+    'WTForms',
+]
 
 setup(
     name='Flask-Wiki',
@@ -19,7 +35,7 @@ setup(
     py_modules=['flask_wiki'],
     # if you would be using a package instead use packages instead
     # of py_modules:
-    packages=['flask_wiki'],
+    packages=find_packages(),
     zip_safe=False,
     include_package_data=True,
     platforms='any',
@@ -31,5 +47,6 @@ setup(
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
-    ]
+    ],
+    install_requires=install_requires
 )

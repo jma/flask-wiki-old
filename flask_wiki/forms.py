@@ -9,10 +9,10 @@
 
 """Forms class."""
 
+from flask_babelex import gettext as _
 from flask_wtf import Form
-from wtforms import TextField, TextAreaField
+from wtforms import TextAreaField, TextField
 from wtforms.validators import InputRequired
-from flask_babel import gettext as _
 
 
 class EditorForm(Form):
