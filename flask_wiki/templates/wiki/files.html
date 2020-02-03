@@ -7,7 +7,8 @@
   more details
 -->
 
-{% extends 'wiki/page.html' %}
+{% extends config.get('WIKI_BASE_TEMPLATE') %}
+{% set active_page = "files" %}
 
 {% block content %}
 <div class="wiki-files">
@@ -22,24 +23,21 @@
 
     <form class="float-right" method="post" enctype="multipart/form-data">
         <div class="custom-file">
-                <button class="btn btn-outline-primary btn-sm">Upload a file</button>
-                <input class="custom-file-input" type="file" name="file" accept="image/*" />
+            <button class="btn btn-outline-primary btn-sm">{{ _('Upload a file') }}</button>
+            <input class="custom-file-input" type="file" name="file" accept="image/*" />
         </div>
     </form>
 
-<h1>{{ _('List of Uploaded Files') }}</h1>
-
+    <h1>{{ _('List of Uploaded Files') }}</h1>
     {% for file in files %}
     <figure class="figure ml-4">
-        <img
-            src="{{ url_for('uploaded_files', filename=file) }}"
-            class="figure-img img-fluid rounded img-thumbnail"
-            alt="{{ file }}"
-        />
+        <img src="{{ url_for('uploaded_files', filename=file) }}" class="figure-img img-fluid rounded img-thumbnail"
+            alt="{{ file }}" />
         <figcaption class="figure-caption text-center">
             <a href="{{ url_for('uploaded_files', filename=file) }}">{{ file }}</a>
-            <button onclick="copy('{{ file }}', '{{ url_for("uploaded_files", filename=file) }}')" class="btn btn-sm btn-outline-primary">
-            <i class="fab fa-markdown"></i>
+            <button data-name="{{ file }}"
+                data-link="{{ url_for('uploaded_files', filename=file) }}" class="copy-md-code btn btn-sm btn-outline-primary">
+                <i class="fa fa-clipboard"></i>
             </button>
         </figcaption>
     </figure>

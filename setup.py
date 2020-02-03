@@ -6,6 +6,14 @@ This is the description for that library
 """
 from setuptools import setup
 
+install_requires = [
+    'Bootstrap-Flask',
+    'Flask',
+    'Flask-Babel',
+    'Flask-WTF',
+    'Markdown',
+    'WTForms',
+]
 
 setup(
     name='Flask-Wiki',
@@ -31,5 +39,6 @@ setup(
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
-    ]
+    ],
+    install_requires=install_requires
 )

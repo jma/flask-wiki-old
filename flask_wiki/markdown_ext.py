@@ -8,8 +8,8 @@
 
 """Python-Markdown extensions."""
 
-from markdown.treeprocessors import Treeprocessor
 from markdown import Extension
+from markdown.treeprocessors import Treeprocessor
 
 
 class BootstrapExtension(Extension):

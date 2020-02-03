@@ -38,19 +38,18 @@
 """Misc utils functions."""
 
 import re
+
 from flask import url_for
 
 
 def clean_url(url):
-    """
-        Cleans the url and corrects various errors. Removes multiple
-        spaces and all leading and trailing spaces. Changes spaces
-        to underscores and makes all characters lowercase. Also
-        takes care of Windows style folders use.
+    """Cleans the url and corrects various errors.
+
+        Removes multiple spaces and all leading and trailing spaces. Changes
+        spaces to underscores and makes all characters lowercase. Also takes
+        care of Windows style folders use.
 
         :param str url: the url to clean
-
-
         :returns: the cleaned url
         :rtype: str
     """
@@ -61,8 +60,8 @@ def clean_url(url):
 
 
 def wikilink(text, url_formatter=None):
-    """
-        Processes Wikilink syntax "[[Link]]" within the html body.
+    """Processes Wikilink syntax "[[Link]]" within the html body.
+
         This is intended to be run after content has been processed
         by markdown and is already HTML.
 

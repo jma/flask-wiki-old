@@ -7,26 +7,26 @@
 }
 
 .wiki-files {
-    position: relative;
+  position: relative;
 }
 .wiki-files .toast {
-    position: absolute;
-    top: 50px;
-    left: 0;
+  position: absolute;
+  top: 50px;
+  left: 0;
 }
 .wiki-files figure img {
-    max-width:200px;
-    max-height:200px
+  max-width: 200px;
+  max-height: 200px;
 }
 .wiki-files form .custom-file {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
 }
-.wiki-files form input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
+.wiki-files form input[type='file'] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
 }

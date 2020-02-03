@@ -8,25 +8,24 @@
 -->
 
 {% from 'bootstrap/form.html' import render_form_row %}
-{% extends 'wiki/page.html' %}
+
+{% extends config.get('WIKI_BASE_TEMPLATE') %}
+{% set active_page = "search" %}
 
 {% block content %}
-
-<form class="form-inline mb-4">
-    <input class="form-control form-control-sm mr-1" type="search" value="{{ query }}" name="q" placeholder="Search" aria-label="Search">
-    <button class="btn btn-sm btn-outline-success" type="submit">Search</button>
-</form>
 {{ results | length }} {{ _('results') }}
-<ul class="list-group list-group-flush">
-    {%- for result in results -%}
-    <li class="list-group-item ">
-        <a class="mr-2" href="{{ url_for('wiki.display', url=result.url) }}">{{ result.title }}</a>
-        {% for tag in result.tags.split(',') %}
-        <span class="badge badge-primary">{{ tag }}</span>
-        {% endfor %}
-    </li>
-{%- endfor -%}
-  </ul>
 
+<ul class="list-group list-group-flush">
+  {%- for result in results -%}
+  <li class="list-group-item ">
+    <a class="mr-2" href="{{ url_for('wiki.page', url=result.url) }}">
+      {{ result.title }}
+    </a>
+    {% for tag in result.tags.split(',') %}
+    <span class="badge badge-primary">{{ tag }}</span>
+    {% endfor %}
+  </li>
+  {%- endfor -%}
+</ul>
 
 {% endblock %}

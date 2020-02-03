@@ -8,11 +8,14 @@ bootstrap-flask = "*"
 flask = "*"
 markdown = "*"
 flask-wtf = "*"
-flask-babel = "*"
+babel = "*"
+flask-babelex = "*"
+flask-wiki = {editable = true, path = "."}
 
 [dev-packages]
 check-manifest = "*"
 ipython = "*"
+"autopep8" = "*"
 
 [requires]
 python_version = "3.6"
